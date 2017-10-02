@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - oraclejdk9
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk8
+  - openjdk7
+notifications:
+  #Build notifications are disabled
+email: false
