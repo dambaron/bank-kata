@@ -16,11 +16,15 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class AccountReport extends TableReport {
 
     private static final int MAX_LINE_LENGTH = 120;
 
-    private final Currency reportCurrency = Currency.getInstance(Locale.getDefault());
+    private Locale locale;
+
+    private Currency reportCurrency = Currency.getInstance(Locale.getDefault());
 
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
 
@@ -32,11 +36,14 @@ public class AccountReport extends TableReport {
         //DO NOTHING
     }
 
-    public AccountReport(Account account) {
-        this.account = account;
+    public AccountReport(Account account, Locale locale) {
+        this.account = checkNotNull(account, "account must not be null");
+        this.locale = checkNotNull(locale, "locale must not be null");
 
-        currencyFormatter.setRoundingMode(RoundingMode.HALF_UP);
-        currencyFormatter.setCurrency(reportCurrency);
+        this.reportCurrency = Currency.getInstance(locale);
+        this.currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+        this.currencyFormatter.setRoundingMode(RoundingMode.HALF_UP);
+        this.currencyFormatter.setCurrency(reportCurrency);
     }
 
     public String toStringReport() {

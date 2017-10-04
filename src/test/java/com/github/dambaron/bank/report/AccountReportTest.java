@@ -23,9 +23,11 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class AccountReportTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountReportTest.class);
+
     private static final Currency EURO_CURRENCY = Currency.getInstance("EUR");
 
-    private static final String EXPECTED_REPORT =
+    private static final String EXPECTED_REPORT_FRANCE = "" +
             "|----------------------------------------------------------------------------------------------------------------------|\n" +
             "|Account: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA                                                                         |\n" +
             "|Owner: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB                                                                           |\n" +
@@ -40,6 +42,40 @@ public class AccountReportTest {
             "|1970-01-06        ||HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH  ||                            ||                    321,00 €|\n" +
             "|----------------------------------------------------------------------------------------------------------------------|\n" +
             "|Balance                                                                                 ||            123 456 789,00 €|\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n";
+
+    private static final String EXPECTED_REPORT_US = "" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|Account: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA                                                                         |\n" +
+            "|Owner: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB                                                                           |\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|Date              ||Operation                             ||                     Deposit||                  Withdrawal|\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|1970-01-01        ||CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC  ||                     $123.00||                            |\n" +
+            "|1970-01-02        ||DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD  ||                            ||                     $987.00|\n" +
+            "|1970-01-03        ||EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE  ||                     $456.00||                            |\n" +
+            "|1970-01-04        ||FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF  ||                            ||                     $654.00|\n" +
+            "|1970-01-05        ||GGGGGGGG-GGGG-GGGG-GGGG-GGGGGGGGGGGG  ||                     $789.00||                            |\n" +
+            "|1970-01-06        ||HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH  ||                            ||                     $321.00|\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|Balance                                                                                 ||             $123,456,789.00|\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n";
+
+    private static final String EXPECTED_REPORT_UK = "" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|Account: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA                                                                         |\n" +
+            "|Owner: BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB                                                                           |\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|Date              ||Operation                             ||                     Deposit||                  Withdrawal|\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|1970-01-01        ||CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC  ||                     £123.00||                            |\n" +
+            "|1970-01-02        ||DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD  ||                            ||                     £987.00|\n" +
+            "|1970-01-03        ||EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE  ||                     £456.00||                            |\n" +
+            "|1970-01-04        ||FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF  ||                            ||                     £654.00|\n" +
+            "|1970-01-05        ||GGGGGGGG-GGGG-GGGG-GGGG-GGGGGGGGGGGG  ||                     £789.00||                            |\n" +
+            "|1970-01-06        ||HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH  ||                            ||                     £321.00|\n" +
+            "|----------------------------------------------------------------------------------------------------------------------|\n" +
+            "|Balance                                                                                 ||             £123,456,789.00|\n" +
             "|----------------------------------------------------------------------------------------------------------------------|\n";
 
     @Test
@@ -113,13 +149,20 @@ public class AccountReportTest {
 
         account.setStatements(statements);
 
-        AccountReport accountReport = new AccountReport(account);
+        AccountReport accountReportFrance = new AccountReport(account, Locale.FRANCE);
+        AccountReport accountReportUS = new AccountReport(account, Locale.US);
+        AccountReport accountReportUK = new AccountReport(account, Locale.UK);
 
         //when
-        String actualReport = accountReport.toStringReport();
+        String actualReportFrance = accountReportFrance.toStringReport();
+        String actualReportUS = accountReportUS.toStringReport();
+        String actualReportUK = accountReportUK.toStringReport();
 
         //then
-        assertThat(actualReport).isEqualTo(EXPECTED_REPORT);
+        assertThat(actualReportFrance).isEqualTo(EXPECTED_REPORT_FRANCE);
+        assertThat(actualReportUS).isEqualTo(EXPECTED_REPORT_US);
+        assertThat(actualReportUK).isEqualTo(EXPECTED_REPORT_UK);
+
 
         System.out.println();
     }
