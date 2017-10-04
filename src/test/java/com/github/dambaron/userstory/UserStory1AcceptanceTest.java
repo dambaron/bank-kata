@@ -11,9 +11,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-
 @Story({"User story #1"})
 @FeatureDeposit
 public class UserStory1AcceptanceTest extends ScenarioTest<GivenAccount, WhenAccount, ThenAccount> {
